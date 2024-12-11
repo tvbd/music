@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+      <title>Music </title>
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.1/css/bootstrap.min.css">
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Bitter:400,700">
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700">
+      <link rel="stylesheet" href="assets/css/styles.css">
+   </head>
+   <body style="padding-bottom: 50px;background: rgb(0,0,0);">
+      <header class="header-dark" style="color: rgb(205,205,205);padding: 0px 0px 10px;">
+         <nav class="navbar navbar-dark navbar-expand-lg navigation-clean-search">
+            <div class="container">
+               <a class="navbar-brand" href="#">Music</a>
+            </div>
+         </nav>
+      </header>
+      <div>
+         <div class="tab-content">
+            <div class="tab-pane active" role="tabpanel" id="tab-1">
+               <section class="highlight-clean" style="background: #000; color: rgb(249,249,249);padding-top: 20px;">
+                  <div class="text-center">
+                     <select id="saavn-bitrate">
+                        <option value="4" selected="">320kbps</option>
+                        <option value="3">160kbps</option>
+                        <option value="2">96kbps</option>
+                        <option value="1">48kbps</option>
+                     </select>
+                  </div>
+                  <p class="text-center" style="padding: 0px 5px;"></p>
+                  <div class="container" style="padding: 0px;">
+                     <div class="intro">
+                        <form class="text-center" action="#" method="get">
+                           <div style="width: 95%;margin: auto;padding: 3px;" placeholder="Enter Song, Artist or Album name">
+                              <input class="form-control float-left fit-content" type="text" id="saavn-search-box" style="margin: 0px;color: var(--gray-dark);max-width: 100%;width: 75%;" placeholder="Enter Name, Year, Artist">
+                              <button class="btn btn-primary" id="saavn-search-trigger" type="submit" style="text-align: center;" onclick="SaavnSearch()">Search</button>
+                           </div>
+                           <h5 class="text-uppercase text-center" style="color: rgb(165,255,184);">Results</h5>
+                        </form>
+                     </div>
+                     <div id="saavn-results" style="margin-bottom: 20px;">
+                        <h5>Featured</h5>
+                     </div>
+                     <div class="text-center" style="width:100%">
+                        <button id="loadmore" style="width: 100%;">Load More</button>
+                     </div>
+                     <div class="button-container"></div>
+                     <script>
+                       
+                       const buttonTitles = [ 'Tamil', 'Tamil Hit Songs', 'Best of 90s - Tamil', 'Tamil Kuthu', 'Tamil Party', 'Tamil Sad', 'English', 'Hindi', 'Telugu', 'Malayalam', 'Punjabi','AR Rahman', 'Swarnalatha', 'S. P. Balasubrahmanyam', 'Sid Sriram ', 'Anirudh Ravichander', 'Arijit Singh', 'Imran Khan', 'Shubh', 'Shreya Ghoshal', 'Diljit Dosanjh', 'Yo Yo Honey Singh', 'Kaifi Khalil', 'Drake', 'Dua Lipa', 'Justin Bieber', 'The Weeknd', 'Ed Sheeran', 'Ice Spice' ]
+                        const buttonContainer = document.querySelector('.button-container');
+                        buttonTitles.forEach(title => {
+                          const button = document.createElement('button');
+                          button.classList.add('search-toggle');
+                          button.textContent = title;
+                          button.setAttribute('onclick', `doSaavnSearch('${title}')`);
+                          buttonContainer.appendChild(button);
+                        });
+                     </script>
+                     <p class="footer" align="center">
+                        <br>This content is not affiliated with or endorsed by any music provider and does not host copyrighted material. <br> -8088yy <br>
+                     </p>
+                     <div style="padding-bottom: 40px;"></div>
+                  </div>
+               </section>
+            </div>
+         </div>
+      </div>
+      <div id="audio-player" style="z-index: 99;background: #ffffff33; width: 100%;margin: 0px;color: var(--light);backdrop-filter: blur(4px);border-top-left-radius: 10px;border-top-right-radius: 20px;">
+         <div class="row" style="margin: 0px;">
+            <div class="col-auto fit-content" style="padding: 0px;">
+               <img class="img-fluid d-inline" id="player-image" style="height: 75px;width: 75px;border-radius: 10px;" src="https://i.pinimg.com/originals/ed/54/d2/ed54d2fa700d36d4f2671e1be84651df.jpg" loading="lazy">
+            </div>
+            <div class="col fit-content" style="padding: 0px;">
+               <div style="max-height: 24px;max-width: 95%;word-wrap: normal; padding-left: 20px;">
+                  <span id="player-name">Song</span>
+                  <span>
+                  <br>
+                  </span>
+                  <span id="player-album">Album</span>
+               </div>
+               <br>
+               <audio id="player" controls="controls" controlsList="nodownload" style="width: 100%;height: 30px; padding-left: 20px; padding-top:5px;">
+                  <source id="audioSource" src="">
+                  </source> Your browser does not support the audio format.
+               </audio>
+            </div>
+         </div>
+      </div>
+      <!-- Floating downloader popup -->
+      <a href="javascript:void(0);" id="mpopupLink" style="position:fixed; top:10px; right:10px; z-index:9999;">
+         <div class="float-button" style="width:50px; height:50px; border-radius:50%; background-color:#ffffffaa; box-shadow: 0 0 10px #000; display: flex; justify-content: center; align-items: center; cursor:pointer;">
+            <!-- Download icon -->
+            <img src="https://img.icons8.com/ios/24/000000/download.png" style="width: 24px; height: 24px;">
+         </div>
+      </a>
+      </div>
+      <!-- Modal popup box -->
+      <div id="mpopupBox" class="mpopup">
+         <!-- Modal content -->
+         <div class="modal-content" style="width: 300px; margin: auto; border-radius: 10px;">
+            <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center;">
+               <h2 style="font-size: 18px; margin: 0;">Downloads</h2>
+               <span class="close" style="cursor: pointer; font-size: 18px;">×</span>
+            </div>
+            <div class="modal-body" style="padding: 10px; text-align: center;">
+               <ul id="download-list" class="nobullets" style="list-style: none; padding: 0; margin: 0;"></ul>
+            </div>
+            <div class="modal-footer" style="padding: 10px; font-size: 12px; text-align: center;">
+               <p style="margin: 0;">Be patient, avoid overloading the media server</p>
+            </div>
+         </div>
+      </div>
+      <script>
+         var mpopup = document.getElementById('mpopupBox');
+         var mpLink = document.getElementById("mpopupLink");
+         var close = document.getElementsByClassName("close")[0];
+         
+         mpLink.onclick = function() {
+           mpopup.style.display = "block";
+         };
+         close.onclick = function() {
+           mpopup.style.display = "none";
+         };
+         window.onclick = function(event) {
+           if (event.target == mpopup) {
+             mpopup.style.display = "none";
+           }
+         };
+      </script>
+      </script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.1/js/bootstrap.bundle.min.js"></script>
+      <script src="assets/js/functions.js"></script>
+      <script src="assets/js/saavn-search.js"></script>
+   </body>
+</html>
